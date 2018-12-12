@@ -9,18 +9,23 @@ class Change{
         
     }
 
+
     static calcStatus(change, cid){
 
-        //sum all the cash-in-drawer
-        const totalCid = cid.map(currency => currency[1])
-                            .reduce( (a,b) => {
-                                return parseFloat((a + b).toFixed(2));
-                            });
-        
-        
-        if(totalCid - change > 0) return 'OPEN';
-        else if(totalCid - change === 0) return 'CLOSED'
-        else return 'INSUFFICIENT_FUNDS';
+        let status = '';
+        const transitionSim = Change.makeTransition(change, cid);
+        const afterCid = transitionSim.newCid.map( item => item[1]).reduce( (a,b) => a += b);
+        const transitionChange = transitionSim.change.map( item => item[1]).reduce( (a, b) => a += b);
+
+        if(transitionChange < change) status = 'INSUFFICIENT_FUNDS';
+        else if (transitionSimChange === change && afterCid === 0) status = 'CLOSED';
+        else status = 'OPEN';
+
+        return status;
+
+
+
+
 
     }
 
@@ -144,10 +149,10 @@ function checkCashRegister(price, cash, cid) {
 
 
 
-  console.log(checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]));
+  //console.log(checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]));
 
-
-
+//console.log(Change.calcStatus(0.5, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]));
+//console.log(Change.makeTransition(0.5, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]))
 
 
 
